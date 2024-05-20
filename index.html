@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>William Daugherty | Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 0;
+        }
+
+        .header a {
+            margin-left: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-card {
+            background: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .project-card:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-icons a {
+            margin-right: 1rem;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="text-3xl font-bold">William Daugherty</h1>
+            <div class="contact-icons">
+                <a href="https://www.linkedin.com/in/williamdaugherty/" target="_blank">
+                    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v4/icons/linkedin.svg" alt="LinkedIn"
+                        class="w-6 h-6">
+                </a>
+                <a href="https://twitter.com/" target="_blank">
+                    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v4/icons/twitter.svg" alt="Twitter"
+                        class="w-6 h-6">
+                </a>
+                <a href="https://github.com/WDaugherty?tab=repositories" target="_blank">
+                    <img src="https://cdn.jsdelivr.net/npm/simple-icons@v4/icons/github.svg" alt="GitHub"
+                        class="w-6 h-6">
+                </a>
+            </div>
+        </header>
+
+        <!-- About Me Section -->
+        <section>
+            <h2 class="section-title">About Me</h2>
+            <p>
+                I am a data scientist with a strong interest in cheminformatics and precision medicine. My work focuses on leveraging data to drive insights and innovation in the healthcare and pharmaceutical industries.
+            </p>
+        </section>
+
+        <!-- Portfolio Section -->
+        <section>
+            <h2 class="section-title">Portfolio</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Example Project Card -->
+                <div class="project-card">
+                    <h3 class="font-semibold text-xl">Project Title</h3>
+                    <p class="text-gray-600">Brief description of the project. Highlight key technologies and outcomes.</p>
+                    <a href="#" class="text-blue-500 hover:underline">View Project</a>
+                </div>
+                <!-- Add more project cards as needed -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // TypeScript Example (optional)
+        type Project = {
+            title: string;
+            description: string;
+            link: string;
+        };
+
+        const projects: Project[] = [
+            {
+                title: "Cheminformatics Analysis",
+                description: "A project focused on analyzing chemical compounds using advanced data science techniques.",
+                link: "#"
+            },
+            {
+                title: "Precision Medicine Data Visualization",
+                description: "Developed a visualization tool for precision medicine data to identify patient-specific treatment options.",
+                link: "#"
+            },
+        ];
+
+        // This script can be used to dynamically add project cards
+        const portfolioSection = document.querySelector(".grid");
+        projects.forEach(project => {
+            const projectCard = document.createElement("div");
+            projectCard.className = "project-card";
+            projectCard.innerHTML = `
+                <h3 class="font-semibold text-xl">${project.title}</h3>
+                <p class="text-gray-600">${project.description}</p>
+                <a href="${project.link}" class="text-blue-500 hover:underline">View Project</a>
+            `;
+            portfolioSection.appendChild(projectCard);
+        });
+    </script>
+</body>
+
+</html>
