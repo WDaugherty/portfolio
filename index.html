@@ -7,6 +7,8 @@
     <title>William Daugherty | Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
         body {
             font-family: 'Inter', sans-serif;
         }
@@ -34,11 +36,14 @@
         }
 
         .project-card {
-            background: #f9fafb;
+            background: #fff;
             padding: 1.5rem;
             border-radius: 0.5rem;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             transition: box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .project-card:hover {
@@ -47,6 +52,32 @@
 
         .contact-icons a {
             margin-right: 1rem;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            font-size: 0.875rem;
+            color: #6b7280;
         }
     </style>
 </head>
@@ -73,6 +104,12 @@
             </div>
         </header>
 
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Welcome to My Portfolio</h1>
+            <p>Explore my projects and learn more about my work in cheminformatics and precision medicine.</p>
+        </section>
+
         <!-- About Me Section -->
         <section>
             <h2 class="section-title">About Me</h2>
@@ -84,52 +121,73 @@
         <!-- Portfolio Section -->
         <section>
             <h2 class="section-title">Portfolio</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Example Project Card -->
+                <div class="project-card">
+                    <h3 class="font-semibold text-xl">Cheminformatics Analysis</h3>
+                    <p class="text-gray-600">A project focused on analyzing chemical compounds using advanced data science techniques.</p>
+                    <a href="#" class="text-blue-500 hover:underline">View Project</a>
+                </div>
+                <div class="project-card">
+                    <h3 class="font-semibold text-xl">Precision Medicine Data Visualization</h3>
+                    <p class="text-gray-600">Developed a visualization tool for precision medicine data to identify patient-specific treatment options.</p>
+                    <a href="#" class="text-blue-500 hover:underline">View Project</a>
+                </div>
+                <!-- Add more project cards as needed -->
                 <div class="project-card">
                     <h3 class="font-semibold text-xl">Project Title</h3>
                     <p class="text-gray-600">Brief description of the project. Highlight key technologies and outcomes.</p>
                     <a href="#" class="text-blue-500 hover:underline">View Project</a>
-                </div>
-                <!-- Add more project cards as needed -->
-            </div>
-        </section>
     </div>
+    <div class="project-card">
+    <h3 class="font-semibold text-xl">Project Title</h3>
+    <p class="text-gray-600">Brief description of the project. Highlight key technologies and outcomes.</p>
+    <a href="#" class="text-blue-500 hover:underline">View Project</a>
+    </div>
+    <div class="project-card">
+    <h3 class="font-semibold text-xl">Project Title</h3>
+    <p class="text-gray-600">Brief description of the project. Highlight key technologies and outcomes.</p>
+    <a href="#" class="text-blue-500 hover:underline">View Project</a>
+    </div>
+    </div>
+    </section>
+    </div>
+<!-- Footer -->
+<footer class="footer">
+    <p>&copy; 2024 William Daugherty. All rights reserved.</p>
+</footer>
 
-    <script>
-        // TypeScript Example (optional)
-        type Project = {
-            title: string;
-            description: string;
-            link: string;
-        };
+<script>
+    // TypeScript Example (optional)
+    type Project = {
+        title: string;
+        description: string;
+        link: string;
+    };
 
-        const projects: Project[] = [
-            {
-                title: "Cheminformatics Analysis",
-                description: "A project focused on analyzing chemical compounds using advanced data science techniques.",
-                link: "#"
-            },
-            {
-                title: "Precision Medicine Data Visualization",
-                description: "Developed a visualization tool for precision medicine data to identify patient-specific treatment options.",
-                link: "#"
-            },
-        ];
+    const projects: Project[] = [
+        {
+            title: "Cheminformatics Analysis",
+            description: "A project focused on analyzing chemical compounds using advanced data science techniques.",
+            link: "#"
+        },
+        {
+            title: "Precision Medicine Data Visualization",
+            description: "Developed a visualization tool for precision medicine data to identify patient-specific treatment options.",
+            link: "#"
+        },
+    ];
 
-        // This script can be used to dynamically add project cards
-        const portfolioSection = document.querySelector(".grid");
-        projects.forEach(project => {
-            const projectCard = document.createElement("div");
-            projectCard.className = "project-card";
-            projectCard.innerHTML = `
-                <h3 class="font-semibold text-xl">${project.title}</h3>
-                <p class="text-gray-600">${project.description}</p>
-                <a href="${project.link}" class="text-blue-500 hover:underline">View Project</a>
-            `;
-            portfolioSection.appendChild(projectCard);
-        });
-    </script>
-</body>
-
-</html>
+    // This script can be used to dynamically add project cards
+    const portfolioSection = document.querySelector(".grid");
+    projects.forEach(project => {
+        const projectCard = document.createElement("div");
+        projectCard.className = "project-card";
+        projectCard.innerHTML = `
+            <h3 class="font-semibold text-xl">${project.title}</h3>
+            <p class="text-gray-600">${project.description}</p>
+            <a href="${project.link}" class="text-blue-500 hover:underline">View Project</a>
+        `;
+        portfolioSection.appendChild(projectCard);
+    });
+</script>
