@@ -8,6 +8,7 @@ import { resolve } from "node:path";
 // scripts, so it skips this tag; GitHub Pages serves the multi-file build.
 const csp: Plugin = {
   name: "csp",
+  apply: "build", // never in dev: Vite and React inject inline scripts there, and a CSP would blank the page
   transformIndexHtml: (html) =>
     html.replace(
       "<head>",
@@ -16,13 +17,19 @@ const csp: Plugin = {
 };
 
 // GitHub Pages serves 404.html for unknown paths; reuse the app shell.
-const notFound: Plugin = {
+const notFound = (outDir: string): Plugin => ({
   name: "pages-404",
-  closeBundle: () => copyFileSync(resolve("dist/index.html"), resolve("dist/404.html")),
-};
+  apply: "build",
+  closeBundle: () => copyFileSync(resolve(outDir, "index.html"), resolve(outDir, "404.html")),
+});
 
-export default defineConfig(({ mode }) => ({
-  base: "./",
-  plugins: mode === "single" ? [react(), viteSingleFile()] : [react(), csp, notFound],
-  build: { outDir: mode === "single" ? "dist-single" : "dist", target: "es2020" },
-}));
+// Modes: default build -> dist/ (GitHub Actions deploy), "docs" -> docs/ (deploy from a branch),
+// "single" -> dist-single/index.html with everything inlined (opens straight from disk).
+export default defineConfig(({ mode }) => {
+  const outDir = mode === "single" ? "dist-single" : mode === "docs" ? "docs" : "dist";
+  return {
+    base: "./",
+    plugins: mode === "single" ? [react(), viteSingleFile()] : [react(), csp, notFound(outDir)],
+    build: { outDir, target: "es2020", emptyOutDir: true },
+  };
+});

@@ -30,7 +30,7 @@ export function MonitorArt() {
       <rect width="320" height="200" fill="var(--glass)" />
       <Grid />
       <path d={d.band} fill="var(--art-band)" />
-      <path d={d.line} fill="none" stroke="var(--moss)" strokeWidth="2" strokeLinejoin="round" />
+      <path d={d.line} fill="none" stroke="var(--moss)" strokeWidth="1.6" strokeLinejoin="round" />
       <circle cx="214" cy="133" r="9" fill="none" stroke="var(--clay)" strokeWidth="1.8" />
       <path d="M0 170 H320" stroke="var(--line)" />
     </svg>
@@ -112,7 +112,7 @@ export function NetworkArt() {
 }
 
 /* Small glyphs for the area cards (square, line style) */
-const g = { viewBox: "0 0 120 150", "aria-hidden": true, fill: "none", stroke: "var(--moss)", strokeWidth: 1.8, strokeLinecap: "round", strokeLinejoin: "round" } as const;
+const g = { viewBox: "0 0 120 150", "aria-hidden": true, fill: "none", stroke: "var(--moss)", strokeWidth: 1.5, strokeLinecap: "round", strokeLinejoin: "round" } as const;
 
 export const Glyphs = {
   pulse: () => (
@@ -167,7 +167,7 @@ export const Glyphs = {
 };
 
 /* Square line art for the earlier-work cards */
-const c = { viewBox: "0 0 100 100", "aria-hidden": true, fill: "none", stroke: "var(--moss)", strokeWidth: 1.8, strokeLinecap: "round", strokeLinejoin: "round" } as const;
+const c = { viewBox: "0 0 100 100", "aria-hidden": true, fill: "none", stroke: "var(--moss)", strokeWidth: 1.5, strokeLinecap: "round", strokeLinejoin: "round" } as const;
 
 export const CardArt = {
   ecg: () => (

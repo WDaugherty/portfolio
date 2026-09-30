@@ -7,10 +7,10 @@
 :root {
   --ground: #b2b9aa;
   --panel: #f3f0e9;
-  --glass: #eef0e8;
+  --glass: #f8f7f3;
   --paper-solid: #ffffff;
   --white: #ffffff;
-  --sumi: #2c2e29;
+  --sumi: #34352f;
   --stone: #62645b;
   --line: #cbc8bb;
   --hair: #e2ded3;
@@ -22,8 +22,8 @@
   --on-dark: rgba(255, 255, 255, 0.94);
   --on-dark-muted: rgba(255, 255, 255, 0.8);
   --on-dark-line: rgba(255, 255, 255, 0.28);
-  --art-grid: #d9dbd0;
-  --art-band: rgba(99, 108, 92, 0.16);
+  --art-grid: #ecebe4;
+  --art-band: rgba(99, 108, 92, 0.11);
   --band-hr: rgba(203, 200, 187, 0.7);
   --band-sp: rgba(99, 108, 92, 0.16);
   --trace-hr: #9a7556;
@@ -597,3 +597,32 @@ main { display: flex; flex-direction: column; gap: var(--gap); }
 .product { height: 100%; }
 .product .card-btn { margin-top: auto; }
 .product-meta { margin-bottom: 12px; }
+
+
+/* ===== Light, white-woven finish (closer to the reference) ===== */
+:root { --panel: #f4f2ec; --line: #d3d0c5; --heading: #3a3b35; }
+.board .sheet-head h2, .banner-intro h1 { color: var(--heading); }
+.banner-intro h1 { color: #fff; }
+
+/* Double frames: thin greige outline, a wide white mat, then the picture */
+.win-frame { padding: 7px; border-color: var(--line); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset; }
+.win-tl .win-glass, .win-bl .win-glass { border-radius: 57px 5px 5px 57px; }
+.win-tr .win-glass, .win-br .win-glass { border-radius: 5px 57px 57px 5px; }
+.win-glass { box-shadow: 0 0 0 1px rgba(203, 200, 187, 0.35); }
+.interests-sheet .area-frame { padding: 7px; border-color: var(--line); border-radius: 3px; }
+.interests-sheet .area-glass { box-shadow: 0 0 0 1px rgba(203, 200, 187, 0.35); }
+.win-label { color: #55574f; font-size: 12.5px; }
+
+/* Product rows: items float on the panel; white used for chips, tags and status boxes */
+.product-art { filter: saturate(0.9); }
+.product-name { color: #6b6c64; }
+.card-btn { background: #5f6858; outline-color: #5f6858; }
+
+/* Lighter illustration lines */
+.win-glass svg, .area-glass svg, .product-art svg { opacity: 0.92; }
+
+/* Generous white space inside panels, like the board */
+.board .sheet { padding: clamp(28px, 3.4vw, 46px) clamp(18px, 2.6vw, 36px); }
+.board { gap: 24px; }
+.area-f { margin-top: -24px; }
+@media (max-width: 960px) { .area-f { margin-top: -14px; } }
