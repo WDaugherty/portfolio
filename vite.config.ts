@@ -1,35 +1,40 @@
-import { defineConfig, type Plugin } from "vite";
-import react from "@vitejs/plugin-react";
-import { viteSingleFile } from "vite-plugin-singlefile";
 import { copyFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { defineConfig, type Plugin } from "vite";
+import react from "@vitejs/plugin-react";
 
-// Content-Security-Policy for the hosted build. The single-file preview inlines its
-// scripts, so it skips this tag; GitHub Pages serves the multi-file build.
-const csp: Plugin = {
-  name: "csp",
-  apply: "build", // never in dev: Vite and React inject inline scripts there, and a CSP would blank the page
-  transformIndexHtml: (html) =>
-    html.replace(
-      "<head>",
-      `<head>\n    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'none'" />`,
-    ),
-};
+const CSP = [
+  "default-src 'self'",
+  "script-src 'self'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data:",
+  "font-src 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'none'",
+].join("; ");
 
-// GitHub Pages serves 404.html for unknown paths; reuse the app shell.
-const notFound = (outDir: string): Plugin => ({
-  name: "pages-404",
-  apply: "build",
-  closeBundle: () => copyFileSync(resolve(outDir, "index.html"), resolve(outDir, "404.html")),
-});
-
-// Modes: default build -> dist/ (GitHub Actions deploy), "docs" -> docs/ (deploy from a branch),
-// "single" -> dist-single/index.html with everything inlined (opens straight from disk).
-export default defineConfig(({ mode }) => {
-  const outDir = mode === "single" ? "dist-single" : mode === "docs" ? "docs" : "dist";
+/** Build only: add a Content-Security-Policy and copy index.html to 404.html for GitHub Pages. */
+function githubPages(): Plugin {
+  let outDir = "dist";
   return {
-    base: "./",
-    plugins: mode === "single" ? [react(), viteSingleFile()] : [react(), csp, notFound(outDir)],
-    build: { outDir, target: "es2020", emptyOutDir: true },
+    name: "github-pages",
+    apply: "build",
+    configResolved: (config) => void (outDir = resolve(config.root, config.build.outDir)),
+    transformIndexHtml: (html) =>
+      html.replace(
+        '<meta charset="utf-8" />',
+        `<meta charset="utf-8" />\n    <meta http-equiv="Content-Security-Policy" content="${CSP}" />`,
+      ),
+    closeBundle: () => copyFileSync(resolve(outDir, "index.html"), resolve(outDir, "404.html")),
   };
+}
+
+export default defineConfig({
+  base: "./",
+  plugins: [react(), githubPages()],
+  define: {
+    __UPDATED__: JSON.stringify(new Date().toLocaleDateString("en-US", { month: "long", year: "numeric" })),
+  },
+  build: { target: "es2020" },
 });

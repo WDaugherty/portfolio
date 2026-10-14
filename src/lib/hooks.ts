@@ -1,46 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
-export function useMediaQuery(query: string, initial = false) {
-  const [match, setMatch] = useState(initial);
+export const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
+
+export function useReducedMotion() {
+  const [reduce, setReduce] = useState(false);
   useEffect(() => {
-    const mq = window.matchMedia(query);
-    const on = () => setMatch(mq.matches);
-    on();
-    mq.addEventListener("change", on);
-    return () => mq.removeEventListener("change", on);
-  }, [query]);
-  return match;
+    const query = matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduce(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  return reduce;
 }
 
-export const useReducedMotion = () => useMediaQuery("(prefers-reduced-motion: reduce)");
-
-/**
- * Scroll-spy: the id of the section currently in the reading band
- * (a strip just above the middle of the viewport). One observer for all sections.
- */
-export function useScrollSpy(ids: readonly string[], enabled: boolean) {
-  const [active, setActive] = useState<string | null>(null);
-  useEffect(() => {
-    if (!enabled) {
-      setActive(null);
-      return;
-    }
-    const visible = new Map<string, number>();
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) visible.set(e.target.id, e.boundingClientRect.top);
-          else visible.delete(e.target.id);
-        }
-        setActive([...visible.entries()].sort((a, b) => a[1] - b[1])[0]?.[0] ?? null);
-      },
-      { rootMargin: "-35% 0px -60% 0px" },
-    );
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) io.observe(el);
-    });
-    return () => io.disconnect();
-  }, [ids, enabled]);
-  return active;
+/** Content width of an element, kept current with a ResizeObserver. */
+export function useWidth<T extends HTMLElement>(fallback: number) {
+  const ref = useRef<T>(null);
+  const [width, setWidth] = useState(fallback);
+  useIsoLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => setWidth(Math.round(entry.contentRect.width)));
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  return [ref, width] as const;
 }

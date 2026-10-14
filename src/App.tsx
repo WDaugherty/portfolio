@@ -1,64 +1,68 @@
 import { useEffect } from "react";
-import { useRoute, type Route } from "./lib/route";
-import { Nav, Footer } from "./components/Chrome";
-import { SpecPage } from "./components/SpecPage";
-import { CVPage, MissingPage, ProjectsPage, ResearchPage, SpecsPage } from "./pages/Pages";
-import { BoardPanels } from "./components/Board";
-
-const NAME = "William Daugherty-Miller";
-const TITLES: Record<string, string> = {
-  home: `${NAME}: clinical data science and precision medicine`,
-  research: `Research: ${NAME}`,
-  projects: `Projects: ${NAME}`,
-  cv: `CV: ${NAME}`,
-  specs: `Specs: ${NAME}`,
-  missing: `Page not found: ${NAME}`,
-};
+import { useRoute, PAGES, type Route } from "./lib/route";
+import { Footer, Nav } from "./components/Chrome";
+import { Home } from "./pages/Home";
+import { Research } from "./pages/Research";
+import { Projects } from "./pages/Projects";
+import { About } from "./pages/About";
+import { CV } from "./pages/CV";
+import { NotFound } from "./pages/NotFound";
+import { PROFILE } from "./data/profile";
 
 function Page({ route }: { route: Route }) {
-  switch (route.name) {
-    case "projects": return <ProjectsPage focus={route.focus} />;
-    case "research": return <ResearchPage />;
-    case "cv": return <CVPage />;
-    case "specs": return <SpecsPage />;
-    case "spec": return <SpecPage slug={route.slug} />;
-    case "missing": return <MissingPage path={route.path} />;
-    default: return null;
+  switch (route.page) {
+    case "research":
+      return <Research />;
+    case "projects":
+      return <Projects focus={route.focus} />;
+    case "about":
+      return <About />;
+    case "cv":
+      return <CV />;
+    case "missing":
+      return <NotFound path={route.path} />;
+    default:
+      return null;
   }
+}
+
+function title(route: Route) {
+  if (route.page === "home") return `${PROFILE.name}, ${PROFILE.affiliation}`;
+  const label = route.page === "missing" ? "Page not found" : PAGES.find((p) => p.name === route.page)!.label;
+  return `${label}: ${PROFILE.name}`;
 }
 
 export function App({ serverHash }: { serverHash?: string }) {
   const route = useRoute(serverHash);
-  const key = route.name === "spec" ? `spec:${route.slug}` : route.name;
-  const focusSlug = route.name === "projects" ? route.focus : undefined;
+  const key = route.page === "missing" ? route.path : route.page;
+  const focus = route.page === "projects" ? route.focus : undefined;
 
+  // On each page change: update the title, return to the top and move focus to the page heading.
   useEffect(() => {
-    if (focusSlug) return;
+    document.title = title(route);
+    if (focus) return;
     window.scrollTo({ top: 0 });
-    if (route.name !== "spec") document.title = TITLES[route.name];
     document.querySelector<HTMLElement>("main h1")?.focus({ preventScroll: true });
-  }, [key, focusSlug]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [key, focus]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const skip = (e: React.MouseEvent) => {
+    e.preventDefault();
+    document.querySelector<HTMLElement>("main h1")?.focus();
+  };
 
   return (
-    <div className="frame">
-      <a className="skip" href="#main" onClick={(e) => { e.preventDefault(); document.querySelector<HTMLElement>("main h1")?.focus(); }}>Skip to content</a>
+    <div className="site">
+      <a className="skip-link" href="#main" onClick={skip}>
+        Skip to content
+      </a>
       <Nav route={route} />
-      {route.name === "home" ? (
-        <div className="board">
-          <main id="main" className="board-main" key={key}>
-            <BoardPanels />
-          </main>
-          <div className="area-f"><Footer attached /></div>
-        </div>
+      {route.page === "home" ? (
+        <Home />
       ) : (
         <>
-          {route.name === "spec" ? (
-            <SpecPage slug={route.slug} />
-          ) : (
-            <main id="main" key={key}>
-              <Page route={route} />
-            </main>
-          )}
+          <main id="main" key={key}>
+            <Page route={route} />
+          </main>
           <Footer />
         </>
       )}
